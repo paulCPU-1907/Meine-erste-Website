@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jagdspiel 2D</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <aside class="panel sidebar">
+        <h1>Jagdspiel 2D</h1>
+        <p class="muted">Tiere jagen, Fleisch verkaufen, Waffen und Fallen verbessern.</p>
+
+        <section class="block">
+          <h2>Status</h2>
+          <div class="row"><span>Geld</span><strong id="money">0</strong></div>
+          <div class="row"><span>Waffe</span><strong id="weaponName">Startwaffe</strong></div>
+          <div class="row"><span>Schaden</span><strong id="damage">1</strong></div>
+          <div class="row"><span>Munition</span><strong id="ammo">0</strong></div>
+          <div class="row"><span>Fallen platziert</span><strong id="trapsPlaced">0</strong></div>
+        </section>
+
+        <section class="block">
+          <h2>Lager</h2>
+          <div class="row"><span>Fleisch gesamt</span><strong id="meatUnits">0</strong></div>
+          <div class="row"><span>Lagerwert</span><strong id="meatValue">0</strong></div>
+          <ul id="inventoryList" class="inventory-list"></ul>
+          <button id="sellButton" class="primary">Verkaufen</button>
+        </section>
+
+        <section class="block shop-block">
+          <h2>Shop</h2>
+          <div class="shop-columns">
+            <section class="shop-column">
+              <h3>Waffen</h3>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Jagdgewehr</p>
+                  <p class="muted">2 Schaden</p>
+                  <p class="muted">Preis: 300</p>
+                </div>
+                <button id="buyRifleButton">Kaufen</button>
+              </div>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Jagdgewehr Pro</p>
+                  <p class="muted">5 Schaden</p>
+                  <p class="muted">Preis: 950</p>
+                </div>
+                <button id="buyRifleProButton">Kaufen</button>
+              </div>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Jagdgewehr Ultra</p>
+                  <p class="muted">10 Schaden</p>
+                  <p class="muted">Preis: 2400</p>
+                </div>
+                <button id="buyRifleUltraButton">Kaufen</button>
+              </div>
+            </section>
+
+            <section class="shop-column">
+              <h3>Munition</h3>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Munition Klein</p>
+                  <p class="muted">+15 Schuss</p>
+                  <p class="muted">Preis: 30</p>
+                </div>
+                <button id="buyAmmoSmallButton">Kaufen</button>
+              </div>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Munition Gross</p>
+                  <p class="muted">+50 Schuss</p>
+                  <p class="muted">Preis: 90</p>
+                </div>
+                <button id="buyAmmoLargeButton">Kaufen</button>
+              </div>
+            </section>
+
+            <section class="shop-column">
+              <h3>Fallen</h3>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Normale Falle</p>
+                  <p class="muted">5 Schaden, Haltbarkeit 5</p>
+                  <p class="muted">Preis: 100</p>
+                </div>
+                <button id="buyTrapNormalButton">Kaufen</button>
+              </div>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Falle Stachel</p>
+                  <p class="muted">10 Schaden, Haltbarkeit 10</p>
+                  <p class="muted">Preis: 220</p>
+                </div>
+                <button id="buyTrapSpikedButton">Kaufen</button>
+              </div>
+              <div class="shop-item">
+                <div>
+                  <p class="item-title">Falle Diamant</p>
+                  <p class="muted">20 Schaden, Haltbarkeit 20</p>
+                  <p class="muted">Preis: 600</p>
+                </div>
+                <button id="buyTrapDiamondButton">Kaufen</button>
+              </div>
+            </section>
+          </div>
+
+          <div class="trap-place-grid">
+            <button id="placeTrapNormalButton" class="secondary">Normale platzieren</button>
+            <button id="placeTrapSpikedButton" class="secondary">Stachel platzieren</button>
+            <button id="placeTrapDiamondButton" class="secondary">Diamant platzieren</button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="game-shell">
+        <header class="game-header">
+          <p id="statusText">Klick ins Spielfeld zum Schiessen.</p>
+        </header>
+        <div id="gameArea" class="game-area">
+          <canvas id="gameCanvas"></canvas>
+          <div id="crosshair" class="crosshair" aria-hidden="true"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

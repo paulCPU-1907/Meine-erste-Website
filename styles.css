@@ -1,0 +1,251 @@
+:root {
+  --bg-1: #0b1220;
+  --bg-2: #1e293b;
+  --panel: rgba(15, 23, 42, 0.78);
+  --panel-border: rgba(148, 163, 184, 0.2);
+  --text-main: #f8fafc;
+  --text-soft: #94a3b8;
+  --accent-a: #22c55e;
+  --accent-b: #0ea5e9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.15), transparent 25%),
+    radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.15), transparent 28%),
+    linear-gradient(160deg, var(--bg-1), var(--bg-2));
+}
+
+.app {
+  width: min(1300px, 100% - 1.25rem);
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 0.8rem 0;
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) 1fr;
+  gap: 0.85rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+}
+
+.sidebar {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+}
+
+h3 {
+  margin: 0.75rem 0 0.4rem;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.muted {
+  margin: 0.35rem 0 0;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+.block {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.45rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.inventory-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.65rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.inventory-list li {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+.shop-item {
+  margin-top: 0.6rem;
+  padding: 0.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.38);
+  display: grid;
+  gap: 0.45rem;
+}
+
+.item-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.shop-block {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.shop-columns {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+}
+
+.shop-column {
+  padding: 0.5rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.28);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(120deg, #374151, #4b5563);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.primary {
+  margin-top: 0.7rem;
+  width: 100%;
+  background: linear-gradient(120deg, var(--accent-a), var(--accent-b));
+}
+
+button.secondary {
+  margin-top: 0.7rem;
+  width: 100%;
+  background: linear-gradient(120deg, #f59e0b, #ef4444);
+}
+
+.trap-place-grid {
+  margin-top: 0.55rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.game-shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+}
+
+.game-header {
+  padding: 0.75rem 0.9rem;
+}
+
+.game-header p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.game-area {
+  position: relative;
+  min-height: 0;
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #7dd3fc 0%, #93c5fd 44%, #86efac 45%, #4d7c0f 100%);
+  cursor: none;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.crosshair {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #f8fafc;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(15, 23, 42, 0.9);
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: "";
+  position: absolute;
+  background: #f8fafc;
+}
+
+.crosshair::before {
+  left: 50%;
+  top: -8px;
+  width: 2px;
+  height: 48px;
+  transform: translateX(-50%);
+}
+
+.crosshair::after {
+  top: 50%;
+  left: -8px;
+  width: 48px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 980px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .sidebar {
+    max-height: 50vh;
+  }
+
+  .shop-columns {
+    grid-template-columns: 1fr;
+  }
+}
