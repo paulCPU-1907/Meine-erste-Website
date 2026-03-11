@@ -659,4 +659,22 @@ button.secondary {
   }
 }
 
+@media (max-width: 1366px) {
+  body.touch-panels .app {
+    grid-template-columns: minmax(180px, 31vw) 1fr !important;
+    grid-template-rows: 1fr !important;
+    height: 100dvh;
+  }
+
+  body.touch-panels .sidebar {
+    height: 100% !important;
+    max-height: none !important;
+  }
+
+  body.touch-panels .game-shell {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+}
+
 
