@@ -666,6 +666,9 @@ class Game {
     this.collapsiblePanels = [];
     this.touchPanelsEnabled =
       window.matchMedia("(hover: none), (pointer: coarse)").matches || (navigator.maxTouchPoints || 0) > 0;
+    if (this.touchPanelsEnabled) {
+      document.body.classList.add("touch-panels");
+    }
 
     this.inventory = new Inventory(this.animalDefs);
     this.weaponSystem = new WeaponSystem();
@@ -768,10 +771,7 @@ class Game {
 
   bindTouchPanelInteractions() {
     this.collapsiblePanels.forEach((panel) => {
-      panel.addEventListener("pointerdown", (event) => {
-        if (event.pointerType === "mouse") {
-          return;
-        }
+      panel.addEventListener("click", (event) => {
         if (event.target.closest("button, a, input, select, textarea, label")) {
           return;
         }
@@ -784,10 +784,7 @@ class Game {
       });
     });
 
-    document.addEventListener("pointerdown", (event) => {
-      if (event.pointerType === "mouse") {
-        return;
-      }
+    document.addEventListener("click", (event) => {
       const clickedPanel = event.target.closest(".inventory-panel, .shop-column");
       if (!clickedPanel) {
         this.closeTouchPanels();

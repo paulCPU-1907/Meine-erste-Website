@@ -275,14 +275,14 @@ h3 {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .inventory-panel:hover .inventory-details {
+  body:not(.touch-panels) .inventory-panel:hover .inventory-details {
     max-height: 920px;
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
 
-  .shop-column:hover .item-extra {
+  body:not(.touch-panels) .shop-column:hover .item-extra {
     max-height: 260px;
     margin-top: 0.7rem;
     padding-top: 0.78rem;
