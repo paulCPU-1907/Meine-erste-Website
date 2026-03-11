@@ -459,6 +459,9 @@ class Shop {
 class UIManager {
   constructor(game) {
     this.game = game;
+    this.touchInventoryEnabled =
+      window.matchMedia("(hover: none), (pointer: coarse)").matches || (navigator.maxTouchPoints || 0) > 0;
+    this.activeInventoryType = null;
     this.el = {
       money: document.getElementById("money"),
       weaponName: document.getElementById("weaponName"),
@@ -492,6 +495,15 @@ class UIManager {
       placeTrapVulkanButton: document.getElementById("placeTrapVulkanButton"),
       placeTrapTitanButton: document.getElementById("placeTrapTitanButton"),
     };
+
+    if (this.touchInventoryEnabled) {
+      document.addEventListener("click", (event) => {
+        const clickedInventoryItem = event.target.closest("#inventoryList li");
+        if (!clickedInventoryItem) {
+          this.activeInventoryType = null;
+        }
+      });
+    }
   }
 
   setText(key, value) {
@@ -539,7 +551,17 @@ class UIManager {
       this.el.inventoryList.innerHTML = "";
       g.animalDefs.forEach((def) => {
         const li = document.createElement("li");
+        li.dataset.type = def.type;
+        if (this.activeInventoryType === def.type) {
+          li.classList.add("inventory-item-active");
+        }
         li.innerHTML = `<span>${def.label}</span><strong>${g.inventory.store[def.type]}</strong>`;
+        if (this.touchInventoryEnabled) {
+          li.addEventListener("click", (event) => {
+            event.stopPropagation();
+            this.activeInventoryType = this.activeInventoryType === def.type ? null : def.type;
+          });
+        }
         this.el.inventoryList.appendChild(li);
       });
     }
