@@ -8,59 +8,68 @@
   </head>
   <body>
     <main class="app">
-      <aside class="panel sidebar">
+      <aside id="sidebar" class="panel sidebar">
         <h1>Jagdspiel 2D</h1>
-        <p class="muted">Tiere jagen, Fleisch verkaufen, Waffen und Fallen verbessern.</p>
+        <p class="muted">Lager verwalten, Fleisch VERKAUFEN und Ausruestung verbessern.</p>
 
-        <section class="block">
-          <h2>Status</h2>
-          <div class="row"><span>Geld</span><strong id="money">0</strong></div>
-          <div class="row"><span>Waffe</span><strong id="weaponName">Startwaffe</strong></div>
-          <div class="row"><span>Schaden</span><strong id="damage">1</strong></div>
-          <div class="row"><span>Munition</span><strong id="ammo">0</strong></div>
-          <div class="row"><span>Fallen platziert</span><strong id="trapsPlaced">0</strong></div>
-        </section>
-
-        <section class="block">
-          <h2>Lager</h2>
-          <div class="row"><span>Fleisch gesamt</span><strong id="meatUnits">0</strong></div>
-          <div class="row"><span>Lagerwert</span><strong id="meatValue">0</strong></div>
-          <ul id="inventoryList" class="inventory-list"></ul>
-          <button id="sellButton" class="primary">Verkaufen</button>
+        <section class="block inventory-panel">
+          <h2>Lager & VERKAUFEN</h2>
+          <div class="inventory-summary">
+            <div class="row"><span>Fleisch gesamt</span><strong id="meatUnits" class="value-meat">0</strong></div>
+            <div class="row"><span>Lagerwert</span><strong id="meatValue" class="value-money">0</strong></div>
+          </div>
+          <div class="inventory-details">
+            <ul id="inventoryList" class="inventory-list"></ul>
+            <div class="sell-panel">
+              <p class="sell-title">ALLES GESAMMELT VERKAUFEN</p>
+              <button id="sellButton" class="primary">VERKAUFEN</button>
+            </div>
+          </div>
         </section>
 
         <section class="block shop-block">
           <h2>Shop</h2>
           <div class="shop-columns">
-            <section class="shop-column">
+            <section class="shop-column shop-column--weapons">
               <h3>Waffen</h3>
               <div class="shop-item">
                 <div>
                   <p class="item-title">Jagdgewehr</p>
                   <p class="muted">2 Schaden</p>
-                  <p class="muted">Preis: 300</p>
                 </div>
                 <button id="buyRifleButton">Kaufen</button>
               </div>
-              <div class="shop-item">
+              <div class="shop-item item-extra">
                 <div>
                   <p class="item-title">Jagdgewehr Pro</p>
                   <p class="muted">5 Schaden</p>
-                  <p class="muted">Preis: 950</p>
                 </div>
                 <button id="buyRifleProButton">Kaufen</button>
               </div>
-              <div class="shop-item">
+              <div class="shop-item item-extra">
                 <div>
                   <p class="item-title">Jagdgewehr Ultra</p>
                   <p class="muted">10 Schaden</p>
-                  <p class="muted">Preis: 2400</p>
                 </div>
                 <button id="buyRifleUltraButton">Kaufen</button>
               </div>
+              <div class="shop-item item-extra">
+                <div>
+                  <p class="item-title">Jagdgewehr Viper</p>
+                  <p class="muted">14 Schaden</p>
+                </div>
+                <button id="buyRifleViperButton">Kaufen</button>
+              </div>
+              <div class="shop-item item-extra">
+                <div>
+                  <p class="item-title">Jagdgewehr Titan</p>
+                  <p class="muted">20 Schaden</p>
+                </div>
+                <button id="buyRifleTitanButton">Kaufen</button>
+              </div>
             </section>
 
-            <section class="shop-column">
+            <section class="shop-column shop-column--ammo">
               <h3>Munition</h3>
               <div class="shop-item">
                 <div>
@@ -70,17 +79,25 @@
                 </div>
                 <button id="buyAmmoSmallButton">Kaufen</button>
               </div>
-              <div class="shop-item">
+              <div class="shop-item item-extra">
                 <div>
-                  <p class="item-title">Munition Gross</p>
-                  <p class="muted">+50 Schuss</p>
-                  <p class="muted">Preis: 90</p>
+                  <p class="item-title">Munition Bombe</p>
+                  <p class="muted">+4 Bombenschuesse (Radius-Schaden)</p>
+                  <p class="muted">Preis: 140</p>
                 </div>
-                <button id="buyAmmoLargeButton">Kaufen</button>
+                <button id="buyAmmoBombButton">Kaufen</button>
+              </div>
+              <div class="shop-item item-extra">
+                <div>
+                  <p class="item-title">Munition Mehrfachschuss</p>
+                  <p class="muted">+6 Schuesse (trifft mehrere Ziele)</p>
+                  <p class="muted">Preis: 170</p>
+                </div>
+                <button id="buyAmmoScatterButton">Kaufen</button>
               </div>
             </section>
 
-            <section class="shop-column">
+            <section class="shop-column shop-column--traps">
               <h3>Fallen</h3>
               <div class="shop-item">
                 <div>
@@ -90,7 +107,7 @@
                 </div>
                 <button id="buyTrapNormalButton">Kaufen</button>
               </div>
-              <div class="shop-item">
+              <div class="shop-item item-extra">
                 <div>
                   <p class="item-title">Falle Stachel</p>
                   <p class="muted">10 Schaden, Haltbarkeit 10</p>
@@ -98,13 +115,29 @@
                 </div>
                 <button id="buyTrapSpikedButton">Kaufen</button>
               </div>
-              <div class="shop-item">
+              <div class="shop-item item-extra">
                 <div>
                   <p class="item-title">Falle Diamant</p>
                   <p class="muted">20 Schaden, Haltbarkeit 20</p>
                   <p class="muted">Preis: 600</p>
                 </div>
                 <button id="buyTrapDiamondButton">Kaufen</button>
+              </div>
+              <div class="shop-item item-extra">
+                <div>
+                  <p class="item-title">Falle Vulkan</p>
+                  <p class="muted">35 Schaden, Haltbarkeit 30</p>
+                  <p class="muted">Preis: 1400</p>
+                </div>
+                <button id="buyTrapVulkanButton">Kaufen</button>
+              </div>
+              <div class="shop-item item-extra">
+                <div>
+                  <p class="item-title">Falle Titan</p>
+                  <p class="muted">50 Schaden, Haltbarkeit 45</p>
+                  <p class="muted">Preis: 2800</p>
+                </div>
+                <button id="buyTrapTitanButton">Kaufen</button>
               </div>
             </section>
           </div>
@@ -113,12 +146,44 @@
             <button id="placeTrapNormalButton" class="secondary">Normale platzieren</button>
             <button id="placeTrapSpikedButton" class="secondary">Stachel platzieren</button>
             <button id="placeTrapDiamondButton" class="secondary">Diamant platzieren</button>
+            <button id="placeTrapVulkanButton" class="secondary">Vulkan platzieren</button>
+            <button id="placeTrapTitanButton" class="secondary">Titan platzieren</button>
           </div>
         </section>
+        <div class="sidebar-tail" aria-hidden="true"></div>
       </aside>
 
       <section class="game-shell">
         <header class="game-header">
+          <section class="status-hud">
+            <div class="hud-item">
+              <span>Geld</span>
+              <strong id="money" class="value-money">0</strong>
+            </div>
+            <div class="hud-item">
+              <span>Waffe</span>
+              <strong id="weaponName">Startwaffe</strong>
+            </div>
+            <div class="hud-item hud-item--damage">
+              <span>Schaden</span>
+              <strong id="damage">1</strong>
+            </div>
+            <div class="hud-item hud-item--ammo">
+              <span>Munition</span>
+              <strong id="ammo">0</strong>
+            </div>
+            <div class="hud-item">
+              <span>Freie Faehigkeiten</span>
+              <strong id="freeAbilities">0</strong>
+            </div>
+          </section>
+          <div class="level-hud">
+            <div class="level-top">
+              <strong id="levelLabel">Level 1</strong>
+              <span id="xpLabel">0 / 120 XP</span>
+            </div>
+            <div class="xp-track"><div id="xpFill" class="xp-fill"></div></div>
+          </div>
           <p id="statusText">Klick ins Spielfeld zum Schiessen.</p>
         </header>
         <div id="gameArea" class="game-area">
