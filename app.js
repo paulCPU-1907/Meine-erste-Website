@@ -664,7 +664,8 @@ class Game {
     this.xp = 0;
     this.xpToNext = this.getXpTarget(this.level);
     this.collapsiblePanels = [];
-    this.touchPanelsEnabled = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    this.touchPanelsEnabled =
+      window.matchMedia("(hover: none), (pointer: coarse)").matches || (navigator.maxTouchPoints || 0) > 0;
 
     this.inventory = new Inventory(this.animalDefs);
     this.weaponSystem = new WeaponSystem();
@@ -764,13 +765,11 @@ class Game {
 
   bindTouchPanelInteractions() {
     this.collapsiblePanels.forEach((panel) => {
-      panel.addEventListener("pointerdown", (event) => {
-        if (event.pointerType === "mouse") {
-          return;
-        }
+      panel.addEventListener("click", (event) => {
         if (event.target.closest("button, a, input, select, textarea, label")) {
           return;
         }
+        this.collapsiblePanels.forEach((item) => item.classList.remove("force-close"));
         const isOpen = panel.classList.contains("touch-open");
         this.closeTouchPanels();
         if (!isOpen) {
@@ -779,10 +778,7 @@ class Game {
       });
     });
 
-    document.addEventListener("pointerdown", (event) => {
-      if (event.pointerType === "mouse") {
-        return;
-      }
+    document.addEventListener("click", (event) => {
       const clickedPanel = event.target.closest(".inventory-panel, .shop-column");
       if (!clickedPanel) {
         this.closeTouchPanels();
