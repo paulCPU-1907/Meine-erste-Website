@@ -1,4 +1,4 @@
-﻿class Animal {
+class Animal {
   constructor(id, def, canvasWidth, canvasHeight, variant = "normal") {
     this.id = id;
     this.type = def.type;
@@ -671,20 +671,19 @@ class Game {
       });
     });
 
-    this.gameArea.addEventListener("mousemove", (event) => {
-      const rect = this.gameArea.getBoundingClientRect();
-      this.crosshair.style.left = `${event.clientX - rect.left}px`;
-      this.crosshair.style.top = `${event.clientY - rect.top}px`;
+    this.gameArea.addEventListener("pointermove", (event) => {
+      this.updateCrosshairFromClient(event.clientX, event.clientY);
     });
 
-    this.gameArea.addEventListener("mouseenter", (event) => {
-      const rect = this.gameArea.getBoundingClientRect();
-      this.crosshair.style.left = `${event.clientX - rect.left}px`;
-      this.crosshair.style.top = `${event.clientY - rect.top}px`;
+    this.gameArea.addEventListener("pointerenter", (event) => {
+      this.updateCrosshairFromClient(event.clientX, event.clientY);
       this.scrollSidebarToTop();
     });
 
-    this.gameArea.addEventListener("click", (event) => {
+    this.gameArea.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+      }
       const pos = this.toCanvasPos(event);
       if (this.activePlacement) {
         this.placeTrap(pos.x, pos.y);
@@ -692,6 +691,9 @@ class Game {
         this.shoot(pos.x, pos.y);
       }
       this.ui.render();
+      if (event.pointerType !== "mouse") {
+        event.preventDefault();
+      }
     });
 
     this.ui.el.sellButton?.addEventListener("click", () => {
@@ -729,9 +731,21 @@ class Game {
 
   resizeCanvas() {
     const rect = this.gameArea.getBoundingClientRect();
-    this.canvas.width = Math.max(700, Math.floor(rect.width));
-    this.canvas.height = Math.max(430, Math.floor(rect.height));
+    if (!rect.width || !rect.height) {
+      return;
+    }
+    this.canvas.width = Math.max(280, Math.floor(rect.width));
+    this.canvas.height = Math.max(220, Math.floor(rect.height));
     this.centerCrosshair();
+  }
+
+  updateCrosshairFromClient(clientX, clientY) {
+    if (!this.crosshair || !this.gameArea) {
+      return;
+    }
+    const rect = this.gameArea.getBoundingClientRect();
+    this.crosshair.style.left = `${clientX - rect.left}px`;
+    this.crosshair.style.top = `${clientY - rect.top}px`;
   }
 
   centerCrosshair() {
