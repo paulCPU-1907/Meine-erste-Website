@@ -484,6 +484,8 @@ class UIManager {
       buyTrapNormalButton: document.getElementById("buyTrapNormalButton"),
       buyTrapSpikedButton: document.getElementById("buyTrapSpikedButton"),
       buyTrapDiamondButton: document.getElementById("buyTrapDiamondButton"),
+      buyTrapVulkanButton: document.getElementById("buyTrapVulkanButton"),
+      buyTrapTitanButton: document.getElementById("buyTrapTitanButton"),
       placeTrapNormalButton: document.getElementById("placeTrapNormalButton"),
       placeTrapSpikedButton: document.getElementById("placeTrapSpikedButton"),
       placeTrapDiamondButton: document.getElementById("placeTrapDiamondButton"),
@@ -520,7 +522,10 @@ class UIManager {
     this.setText("weaponName", g.weaponSystem.currentName());
     this.setText("damage", g.getHudDamageText());
     this.setText("ammo", `${g.weaponSystem.ammoLabel()} | ${g.weaponSystem.activeShotLabel()}`);
-    this.setText("freeAbilities", String(g.trapStock.normal + g.trapStock.stachel + g.trapStock.diamant));
+    this.setText(
+      "freeAbilities",
+      String(g.trapStock.normal + g.trapStock.stachel + g.trapStock.diamant + g.trapStock.vulkan + g.trapStock.titan),
+    );
     this.setText("levelLabel", `Level ${g.level}`);
     this.setText("xpLabel", `${Math.floor(g.xp)} / ${g.xpToNext} XP`);
     this.setText("meatUnits", String(g.inventory.totalMeat()));
@@ -560,13 +565,19 @@ class UIManager {
     this.setDisabled("buyTrapNormalButton", g.money < g.trapDefs.normal.cost);
     this.setDisabled("buyTrapSpikedButton", g.money < g.trapDefs.stachel.cost);
     this.setDisabled("buyTrapDiamondButton", g.money < g.trapDefs.diamant.cost);
+    this.setDisabled("buyTrapVulkanButton", g.money < g.trapDefs.vulkan.cost);
+    this.setDisabled("buyTrapTitanButton", g.money < g.trapDefs.titan.cost);
     this.setButtonText("buyTrapNormalButton", `Kaufen (${g.trapStock.normal})`);
     this.setButtonText("buyTrapSpikedButton", `Kaufen (${g.trapStock.stachel})`);
     this.setButtonText("buyTrapDiamondButton", `Kaufen (${g.trapStock.diamant})`);
+    this.setButtonText("buyTrapVulkanButton", `Kaufen (${g.trapStock.vulkan})`);
+    this.setButtonText("buyTrapTitanButton", `Kaufen (${g.trapStock.titan})`);
 
     this.setDisabled("placeTrapNormalButton", g.trapStock.normal <= 0);
     this.setDisabled("placeTrapSpikedButton", g.trapStock.stachel <= 0);
     this.setDisabled("placeTrapDiamondButton", g.trapStock.diamant <= 0);
+    this.setDisabled("placeTrapVulkanButton", g.trapStock.vulkan <= 0);
+    this.setDisabled("placeTrapTitanButton", g.trapStock.titan <= 0);
     this.setButtonText(
       "placeTrapNormalButton",
       g.trapStock.normal <= 0
@@ -591,10 +602,22 @@ class UIManager {
           ? "Klick ins Feld..."
           : "Diamant platzieren",
     );
-    this.setDisabled("placeTrapVulkanButton", true);
-    this.setDisabled("placeTrapTitanButton", true);
-    this.setButtonText("placeTrapVulkanButton", "LOCK Vulkan");
-    this.setButtonText("placeTrapTitanButton", "LOCK Titan");
+    this.setButtonText(
+      "placeTrapVulkanButton",
+      g.trapStock.vulkan <= 0
+        ? "LOCK Vulkan"
+        : g.activePlacement === "vulkan"
+          ? "Klick ins Feld..."
+          : "Vulkan platzieren",
+    );
+    this.setButtonText(
+      "placeTrapTitanButton",
+      g.trapStock.titan <= 0
+        ? "LOCK Titan"
+        : g.activePlacement === "titan"
+          ? "Klick ins Feld..."
+          : "Titan platzieren",
+    );
   }
 }
 
@@ -625,12 +648,14 @@ class Game {
       normal: { type: "normal", label: "Normale Falle", damage: 5, durability: 5, cost: 100, color: "#94a3b8" },
       stachel: { type: "stachel", label: "Falle Stachel", damage: 10, durability: 10, cost: 220, color: "#f97316" },
       diamant: { type: "diamant", label: "Falle Diamant", damage: 20, durability: 20, cost: 600, color: "#06b6d4" },
+      vulkan: { type: "vulkan", label: "Falle Vulkan", damage: 35, durability: 30, cost: 1400, color: "#dc2626" },
+      titan: { type: "titan", label: "Falle Titan", damage: 50, durability: 45, cost: 2800, color: "#7c3aed" },
     };
 
     this.money = 0;
     this.animals = [];
     this.traps = [];
-    this.trapStock = { normal: 0, stachel: 0, diamant: 0 };
+    this.trapStock = { normal: 0, stachel: 0, diamant: 0, vulkan: 0, titan: 0 };
     this.activePlacement = null;
     this.particles = [];
     this.floatingTexts = [];
@@ -727,15 +752,22 @@ class Game {
     this.ui.el.buyTrapNormalButton?.addEventListener("click", () => this.buyTrap("normal"));
     this.ui.el.buyTrapSpikedButton?.addEventListener("click", () => this.buyTrap("stachel"));
     this.ui.el.buyTrapDiamondButton?.addEventListener("click", () => this.buyTrap("diamant"));
+    this.ui.el.buyTrapVulkanButton?.addEventListener("click", () => this.buyTrap("vulkan"));
+    this.ui.el.buyTrapTitanButton?.addEventListener("click", () => this.buyTrap("titan"));
 
     this.ui.el.placeTrapNormalButton?.addEventListener("click", () => this.togglePlacement("normal"));
     this.ui.el.placeTrapSpikedButton?.addEventListener("click", () => this.togglePlacement("stachel"));
     this.ui.el.placeTrapDiamondButton?.addEventListener("click", () => this.togglePlacement("diamant"));
+    this.ui.el.placeTrapVulkanButton?.addEventListener("click", () => this.togglePlacement("vulkan"));
+    this.ui.el.placeTrapTitanButton?.addEventListener("click", () => this.togglePlacement("titan"));
   }
 
   bindTouchPanelInteractions() {
     this.collapsiblePanels.forEach((panel) => {
-      panel.addEventListener("click", (event) => {
+      panel.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse") {
+          return;
+        }
         if (event.target.closest("button, a, input, select, textarea, label")) {
           return;
         }
@@ -747,7 +779,10 @@ class Game {
       });
     });
 
-    document.addEventListener("click", (event) => {
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
       const clickedPanel = event.target.closest(".inventory-panel, .shop-column");
       if (!clickedPanel) {
         this.closeTouchPanels();
