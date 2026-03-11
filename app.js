@@ -714,6 +714,9 @@ class Game {
       if (event.pointerType === "mouse" && event.button !== 0) {
         return;
       }
+      if (this.touchPanelsEnabled && event.pointerType !== "mouse") {
+        this.closeTouchPanels();
+      }
       const pos = this.toCanvasPos(event);
       if (this.activePlacement) {
         this.placeTrap(pos.x, pos.y);
@@ -765,7 +768,10 @@ class Game {
 
   bindTouchPanelInteractions() {
     this.collapsiblePanels.forEach((panel) => {
-      panel.addEventListener("click", (event) => {
+      panel.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse") {
+          return;
+        }
         if (event.target.closest("button, a, input, select, textarea, label")) {
           return;
         }
@@ -778,7 +784,10 @@ class Game {
       });
     });
 
-    document.addEventListener("click", (event) => {
+    document.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
       const clickedPanel = event.target.closest(".inventory-panel, .shop-column");
       if (!clickedPanel) {
         this.closeTouchPanels();
