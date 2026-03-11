@@ -490,18 +490,18 @@ button.secondary {
   z-index: 2;
   width: 34px;
   height: 34px;
-  border: 2px solid #f8fafc;
+  border: 2px solid #ef4444;
   border-radius: 999px;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  box-shadow: 0 0 12px rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 12px rgba(127, 29, 29, 0.9);
 }
 
 .crosshair::before,
 .crosshair::after {
   content: "";
   position: absolute;
-  background: #f8fafc;
+  background: #ef4444;
 }
 
 .crosshair::before {
