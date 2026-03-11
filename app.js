@@ -639,6 +639,7 @@ class Game {
     this.xp = 0;
     this.xpToNext = this.getXpTarget(this.level);
     this.collapsiblePanels = [];
+    this.touchPanelsEnabled = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
     this.inventory = new Inventory(this.animalDefs);
     this.weaponSystem = new WeaponSystem();
@@ -670,6 +671,9 @@ class Game {
         panel.classList.remove("force-close");
       });
     });
+    if (this.touchPanelsEnabled) {
+      this.bindTouchPanelInteractions();
+    }
 
     this.gameArea.addEventListener("pointermove", (event) => {
       this.updateCrosshairFromClient(event.clientX, event.clientY);
@@ -729,6 +733,32 @@ class Game {
     this.ui.el.placeTrapDiamondButton?.addEventListener("click", () => this.togglePlacement("diamant"));
   }
 
+  bindTouchPanelInteractions() {
+    this.collapsiblePanels.forEach((panel) => {
+      panel.addEventListener("click", (event) => {
+        if (event.target.closest("button, a, input, select, textarea, label")) {
+          return;
+        }
+        const isOpen = panel.classList.contains("touch-open");
+        this.closeTouchPanels();
+        if (!isOpen) {
+          panel.classList.add("touch-open");
+        }
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      const clickedPanel = event.target.closest(".inventory-panel, .shop-column");
+      if (!clickedPanel) {
+        this.closeTouchPanels();
+      }
+    });
+  }
+
+  closeTouchPanels() {
+    this.collapsiblePanels.forEach((panel) => panel.classList.remove("touch-open"));
+  }
+
   resizeCanvas() {
     const rect = this.gameArea.getBoundingClientRect();
     if (!rect.width || !rect.height) {
@@ -776,6 +806,9 @@ class Game {
   closeHoverPanels() {
     if (document.activeElement && typeof document.activeElement.blur === "function") {
       document.activeElement.blur();
+    }
+    if (this.touchPanelsEnabled) {
+      this.closeTouchPanels();
     }
     this.collapsiblePanels.forEach((panel) => {
       if (panel.classList.contains("shop-column")) {

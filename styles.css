@@ -154,7 +154,8 @@ h3 {
   transition: max-height 220ms ease, opacity 180ms ease, transform 180ms ease;
 }
 
-.inventory-panel:hover .inventory-details {
+.inventory-panel:hover .inventory-details,
+.inventory-panel.touch-open .inventory-details {
   max-height: 920px;
   opacity: 1;
   transform: translateY(0);
@@ -253,7 +254,8 @@ h3 {
   transition: max-height 190ms ease, opacity 170ms ease, transform 170ms ease, margin 170ms ease, padding 170ms ease;
 }
 
-.shop-column:hover .item-extra {
+.shop-column:hover .item-extra,
+.shop-column.touch-open .item-extra {
   max-height: 260px;
   margin-top: 0.7rem;
   padding-top: 0.78rem;
@@ -540,65 +542,3 @@ button.secondary {
   }
 }
 
-@media (hover: none), (pointer: coarse) {
-  .inventory-details {
-    max-height: 920px;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-  }
-
-  .shop-column .item-extra {
-    max-height: 260px;
-    margin-top: 0.7rem;
-    padding-top: 0.78rem;
-    padding-bottom: 0.78rem;
-    opacity: 1;
-    border-width: 1px;
-    transform: none;
-  }
-
-  .game-area {
-    cursor: crosshair;
-  }
-
-  .crosshair {
-    display: none;
-  }
-}
-
-@media (max-width: 680px) {
-  .app {
-    width: calc(100% - 0.6rem);
-    padding: 0.35rem 0;
-    gap: 0.45rem;
-    grid-template-rows: minmax(280px, 44dvh) 1fr;
-  }
-
-  .sidebar {
-    padding: 0.75rem 0.6rem;
-    max-height: 44dvh;
-  }
-
-  .block {
-    margin-top: 0.7rem;
-    padding: 0.65rem;
-  }
-
-  .status-hud {
-    grid-template-columns: 1fr;
-  }
-
-  .hud-item strong {
-    font-size: 0.92rem;
-  }
-
-  .game-header {
-    padding: 0.55rem 0.6rem 0.4rem;
-  }
-
-  button {
-    font-size: 0.9rem;
-    padding: 0.62rem 0.8rem;
-  }
-}
