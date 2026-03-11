@@ -691,6 +691,9 @@ class Game {
     window.addEventListener("resize", () => this.resizeCanvas());
     this.collapsiblePanels = Array.from(document.querySelectorAll(".inventory-panel, .shop-column"));
     this.collapsiblePanels.forEach((panel) => {
+      if (this.touchPanelsEnabled) {
+        return;
+      }
       const unlock = () => panel.classList.remove("force-close");
       panel.addEventListener("mouseenter", unlock);
       panel.addEventListener("mousemove", unlock);
@@ -773,6 +776,10 @@ class Game {
     this.collapsiblePanels.forEach((panel) => {
       panel.addEventListener("click", (event) => {
         if (event.target.closest("button, a, input, select, textarea, label")) {
+          return;
+        }
+        const header = event.target.closest("h2, h3");
+        if (!header || !panel.contains(header)) {
           return;
         }
         this.collapsiblePanels.forEach((item) => item.classList.remove("force-close"));
