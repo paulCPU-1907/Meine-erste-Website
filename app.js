@@ -462,6 +462,7 @@ class UIManager {
     this.touchInventoryEnabled =
       window.matchMedia("(hover: none), (pointer: coarse)").matches || (navigator.maxTouchPoints || 0) > 0;
     this.activeInventoryType = null;
+    this.inventoryRows = new Map();
     this.el = {
       money: document.getElementById("money"),
       weaponName: document.getElementById("weaponName"),
@@ -528,6 +529,31 @@ class UIManager {
     this.setText("statusText", text);
   }
 
+  ensureInventoryRows() {
+    if (!this.el.inventoryList) {
+      return;
+    }
+    if (this.inventoryRows.size === this.game.animalDefs.length && this.el.inventoryList.children.length > 0) {
+      return;
+    }
+
+    this.el.inventoryList.innerHTML = "";
+    this.inventoryRows.clear();
+    this.game.animalDefs.forEach((def) => {
+      const li = document.createElement("li");
+      li.dataset.type = def.type;
+      li.innerHTML = `<span>${def.label}</span><strong>0</strong>`;
+      if (this.touchInventoryEnabled) {
+        li.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.activeInventoryType = this.activeInventoryType === def.type ? null : def.type;
+        });
+      }
+      this.el.inventoryList.appendChild(li);
+      this.inventoryRows.set(def.type, li);
+    });
+  }
+
   render() {
     const g = this.game;
     this.setText("money", String(g.money));
@@ -548,21 +574,17 @@ class UIManager {
     }
 
     if (this.el.inventoryList) {
-      this.el.inventoryList.innerHTML = "";
+      this.ensureInventoryRows();
       g.animalDefs.forEach((def) => {
-        const li = document.createElement("li");
-        li.dataset.type = def.type;
-        if (this.activeInventoryType === def.type) {
-          li.classList.add("inventory-item-active");
+        const li = this.inventoryRows.get(def.type);
+        if (!li) {
+          return;
         }
-        li.innerHTML = `<span>${def.label}</span><strong>${g.inventory.store[def.type]}</strong>`;
-        if (this.touchInventoryEnabled) {
-          li.addEventListener("click", (event) => {
-            event.stopPropagation();
-            this.activeInventoryType = this.activeInventoryType === def.type ? null : def.type;
-          });
+        li.classList.toggle("inventory-item-active", this.activeInventoryType === def.type);
+        const valueEl = li.querySelector("strong");
+        if (valueEl) {
+          valueEl.textContent = String(g.inventory.store[def.type]);
         }
-        this.el.inventoryList.appendChild(li);
       });
     }
 
